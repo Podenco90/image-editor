@@ -1,0 +1,71 @@
+.container {
+  padding: 1rem;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  vertical-align: center;
+}
+
+.canvas {
+  overflow: scroll;
+}
+
+.canvas__element {
+  background-color: #fff;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  border: 0.5px solid black;
+}
+
+.actions__zoom {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.actions > div {
+  display: flex;
+  justify-content: center;
+}
+
+.actions__sizing {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 14px;
+  text-align: center;
+}
+
+.actions__inputs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 1rem;
+}
+
+.actions input {
+  min-width: 0;
+}
+
+.label {
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.actions__blur {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0 !important;
+}
+
+.actions__slider {
+  width: 100%;
+}
+
+.link {
+  text-align: center;
+}
