@@ -1,9 +1,9 @@
 import { canvasStore } from '@podenco/state/canvas';
 import { utils } from '@podenco/utils';
-import { RefObject, useCallback, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import useQueryParams from './useQueryParams';
 
-export default function useCanvas(container: RefObject<HTMLDivElement>) {
+export default function useCanvas() {
   const setImgHeight = canvasStore((state) => state.setImgHeight);
   const setImgWidth = canvasStore((state) => state.setImgWidth);
   const canvasInitialized = canvasStore((state) => state.canvasInitialized);
@@ -13,6 +13,7 @@ export default function useCanvas(container: RefObject<HTMLDivElement>) {
   const srcImgHeight = canvasStore((state) => state.srcImgHeight);
   const srcImgWidth = canvasStore((state) => state.srcImgWidth);
   const setZoomLevel = canvasStore((state) => state.setZoomLevel);
+  const canvasContainerRef = canvasStore((state) => state.canvasContainerRef);
 
   const [params] = useQueryParams();
   const {
@@ -26,8 +27,8 @@ export default function useCanvas(container: RefObject<HTMLDivElement>) {
     if (srcImgWidth && srcImgHeight) {
       const calcWidth = (queryWidth !== null && +queryWidth) || srcImgWidth;
       const calcHeight = (queryHeight !== null && +queryHeight) || srcImgHeight;
-      if (container && container.current) {
-        const element = container.current;
+      if (canvasContainerRef && canvasContainerRef.current) {
+        const element = canvasContainerRef.current;
         const containerWidth = element.clientWidth;
         const containerHeight = element.clientHeight;
         const scaledWidth = containerWidth / calcWidth;
@@ -36,7 +37,7 @@ export default function useCanvas(container: RefObject<HTMLDivElement>) {
         factor < 1 && setZoomLevel(factor);
       }
     }
-  }, [container, queryHeight, queryWidth, setZoomLevel, srcImgHeight, srcImgWidth]);
+  }, [canvasContainerRef, queryHeight, queryWidth, setZoomLevel, srcImgHeight, srcImgWidth]);
 
   // fill canvas with image
   useEffect(() => {
@@ -60,7 +61,6 @@ export default function useCanvas(container: RefObject<HTMLDivElement>) {
   }, [
     canvasInitialized,
     canvasRef,
-    container,
     initZoomLevel,
     queryHeight,
     queryWidth,

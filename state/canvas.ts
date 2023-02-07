@@ -17,6 +17,8 @@ export const canvasStore = create<{
   setCanvasInitialized: (value: boolean) => void;
   canvasRef: React.MutableRefObject<HTMLCanvasElement | null>;
   setCanvasRef: (value: React.MutableRefObject<HTMLCanvasElement | null>) => void;
+  canvasContainerRef: React.MutableRefObject<HTMLDivElement | null>;
+  setCanvasContainerRef: (value: React.MutableRefObject<HTMLDivElement | null>) => void;
   srcImg: HTMLImageElement | null;
   setSrcImg: (value: HTMLImageElement | null) => void;
   srcImgWidth: number | null;
@@ -44,6 +46,8 @@ export const canvasStore = create<{
   setCanvasInitialized: (value) => set({ canvasInitialized: value }),
   canvasRef: { current: null },
   setCanvasRef: (value) => set({ canvasRef: value }),
+  canvasContainerRef: { current: null },
+  setCanvasContainerRef: (value) => set({ canvasContainerRef: value }),
   srcImg: null,
   setSrcImg: (value) => set({ srcImg: value }),
   srcImgWidth: null,
