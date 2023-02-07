@@ -12,8 +12,16 @@ import DownloadComponent from '@podenco/components/download';
 import GrayscaleComponent from '@podenco/components/grayscale';
 import SizeComponent from '@podenco/components/size';
 import ZoomComponent from '@podenco/components/zoom';
+import { canvasStore } from '@podenco/state/canvas';
+import { useUnmount } from 'react-use';
 
 export default function Edit() {
+  const reset = canvasStore((state) => state.reset);
+
+  useUnmount(() => {
+    reset();
+  });
+
   const [_, setParams] = useQueryParams();
 
   useImage();
