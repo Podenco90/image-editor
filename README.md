@@ -10,7 +10,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - Possibly add SSR on image search
 - Add progressive image enhancement for search
 - Refactor css (CSS in JS or SASS)
-- Split search page into reasonable components
+- ~~Split search page into reasonable components~~
 - Move search page state to Zustand
 - Add commit hooks
 
