@@ -1,11 +1,10 @@
+import ImageGalleryComponent, { APIImage } from '@podenco/components/imageGallery';
+import SearchActionsComponent from '@podenco/components/searchActions';
+import useImageList from '@podenco/hooks/useImageList';
 import useQueryParams from '@podenco/hooks/useQueryParams';
 import styles from '@podenco/styles/Home.module.css';
 import Head from 'next/head';
 import { useState } from 'react';
-
-import ImageGalleryComponent, { APIImage } from '@podenco/components/imageGallery';
-import SearchActionsComponent from '@podenco/components/searchActions';
-import useImageList from '@podenco/hooks/useImageList';
 
 export default function Home() {
   const [data, setData] = useState<APIImage[] | null>(null);

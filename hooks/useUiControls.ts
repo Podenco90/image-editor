@@ -1,5 +1,6 @@
 import { canvasStore } from '@podenco/state/canvas';
 import { useEffect } from 'react';
+
 import useQueryParams from './useQueryParams';
 
 export default function useUiControls() {

@@ -1,6 +1,7 @@
 import { canvasStore } from '@podenco/state/canvas';
 import { utils } from '@podenco/utils';
 import { useCallback, useEffect } from 'react';
+
 import useQueryParams from './useQueryParams';
 
 export default function useCanvas() {

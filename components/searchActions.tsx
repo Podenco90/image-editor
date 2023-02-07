@@ -1,5 +1,5 @@
-import { Button } from 'antd';
 import styles from '@podenco/styles/Home.module.css';
+import { Button } from 'antd';
 import { useRouter } from 'next/router';
 
 export default function SearchAction({
