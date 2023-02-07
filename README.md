@@ -9,11 +9,12 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - Refine zoom behaviour in editor
 - Persist zoom in URL (?)
 - Possibly add SSR on image search
-- Add progressive image enhancement for search
+- Add progressive image enhancement for search (Blur hash or prefetch small image)
 - Refactor css (CSS in JS or SASS)
 - ~~Split search page into reasonable components~~
 - Move search page state to Zustand
 - Add commit hooks
+- Check app performance & accessibility
 
 ## Getting Started
 

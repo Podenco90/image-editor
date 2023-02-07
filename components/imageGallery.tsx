@@ -38,6 +38,7 @@ export default function ImageGallery({ data }: { data: APIImage[] | null }) {
                   sizes="(max-width: 768px) 100vw,
                             (max-width: 1100px) 50vw,
                             33vw"
+                  style={{ borderRadius: '8px' }}
                 ></Image>
               </div>
               <div className={styles.imageGallery__title}>
