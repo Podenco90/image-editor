@@ -1,24 +1,18 @@
 import { canvasStore } from '@podenco/state/canvas';
-import { useEffect } from 'react';
+import { utils } from '@podenco/utils';
+import { RefObject, useCallback, useEffect } from 'react';
 import useQueryParams from './useQueryParams';
 
-export default function useCanvas({
-  handleBlurLevelChange,
-  handleGrayscaleChange,
-}: {
-  handleBlurLevelChange: (value: number, push: boolean) => void;
-  handleGrayscaleChange: (value: boolean, push: boolean) => void;
-}) {
+export default function useCanvas(container: RefObject<HTMLDivElement>) {
   const setImgHeight = canvasStore((state) => state.setImgHeight);
   const setImgWidth = canvasStore((state) => state.setImgWidth);
-  const setAspectRatio = canvasStore((state) => state.setAspectRatio);
   const canvasInitialized = canvasStore((state) => state.canvasInitialized);
   const setCanvasInitialized = canvasStore((state) => state.setCanvasInitialized);
   const canvasRef = canvasStore((state) => state.canvasRef);
   const srcImg = canvasStore((state) => state.srcImg);
   const srcImgHeight = canvasStore((state) => state.srcImgHeight);
   const srcImgWidth = canvasStore((state) => state.srcImgWidth);
-  const srcImgAspectRatio = canvasStore((state) => state.srcImgAspectRatio);
+  const setZoomLevel = canvasStore((state) => state.setZoomLevel);
 
   const [params] = useQueryParams();
   const {
@@ -27,17 +21,36 @@ export default function useCanvas({
     blur: queryBlur,
     grayscale: queryGrayscale,
   } = params;
+
+  const initZoomLevel = useCallback(() => {
+    if (srcImgWidth && srcImgHeight) {
+      const calcWidth = (queryWidth !== null && +queryWidth) || srcImgWidth;
+      const calcHeight = (queryHeight !== null && +queryHeight) || srcImgHeight;
+      if (container && container.current) {
+        const element = container.current;
+        const containerWidth = element.clientWidth;
+        const containerHeight = element.clientHeight;
+        const scaledWidth = containerWidth / calcWidth;
+        const scaledHeight = containerHeight / calcHeight;
+        const factor = Math.min(scaledWidth, scaledHeight);
+        factor < 1 && setZoomLevel(factor);
+      }
+    }
+  }, [container, queryHeight, queryWidth, setZoomLevel, srcImgHeight, srcImgWidth]);
+
   // fill canvas with image
   useEffect(() => {
-    if (srcImg && srcImgHeight && srcImgWidth) {
+    if (srcImg && srcImgHeight && srcImgWidth && !canvasInitialized) {
       const canvas = canvasRef.current;
       if (canvas) {
         const ctx = canvas.getContext('2d');
-        canvas.width = srcImgWidth;
-        canvas.height = srcImgHeight;
-        setImgWidth(srcImgWidth);
-        setImgHeight(srcImgHeight);
-        setAspectRatio(srcImgAspectRatio);
+        const calcWidth = (queryWidth !== null && +queryWidth) || srcImgWidth;
+        const calcHeight = (queryHeight !== null && +queryHeight) || srcImgHeight;
+        canvas.width = calcWidth;
+        canvas.height = calcHeight;
+        setImgWidth(calcWidth);
+        setImgHeight(calcHeight);
+        initZoomLevel();
         if (ctx) {
           ctx.drawImage(srcImg, 0, 0);
           setCanvasInitialized(true);
@@ -45,15 +58,19 @@ export default function useCanvas({
       }
     }
   }, [
-    srcImg,
-    srcImgHeight,
-    srcImgWidth,
+    canvasInitialized,
     canvasRef,
-    setAspectRatio,
+    container,
+    initZoomLevel,
+    queryHeight,
+    queryWidth,
     setCanvasInitialized,
     setImgHeight,
     setImgWidth,
-    srcImgAspectRatio,
+    setZoomLevel,
+    srcImg,
+    srcImgHeight,
+    srcImgWidth,
   ]);
 
   // change canvas based on query params
@@ -63,23 +80,14 @@ export default function useCanvas({
     const context = canvas?.getContext('2d');
 
     if (canvas && context && srcImg) {
-      const drawWidth = queryWidth !== null ? +queryWidth : srcImg.naturalWidth;
-      const drawHeight = queryHeight !== null ? +queryHeight : srcImg.naturalHeight;
-      canvas.width = drawWidth;
-      canvas.height = drawHeight;
-      handleGrayscaleChange(queryGrayscale === 'true' ? true : false, false);
-      queryBlur && handleBlurLevelChange(+queryBlur, false);
-      context.drawImage(srcImg, 0, 0, drawWidth, drawHeight);
+      const calcWidth = queryWidth !== null ? +queryWidth : srcImg.naturalWidth;
+      const calcHeight = queryHeight !== null ? +queryHeight : srcImg.naturalHeight;
+      canvas.height = calcHeight;
+      canvas.width = calcWidth;
+      queryGrayscale !== null &&
+        utils.setGrayscale(canvas, queryGrayscale === 'true' ? true : false);
+      queryBlur !== null && utils.setBlur(canvas, +queryBlur);
+      context.drawImage(srcImg, 0, 0, calcWidth, calcHeight);
     }
-  }, [
-    canvasInitialized,
-    canvasRef,
-    handleBlurLevelChange,
-    handleGrayscaleChange,
-    queryBlur,
-    queryGrayscale,
-    queryHeight,
-    queryWidth,
-    srcImg,
-  ]);
+  }, [canvasInitialized, canvasRef, queryBlur, queryGrayscale, queryHeight, queryWidth, srcImg]);
 }

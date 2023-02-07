@@ -1,8 +1,6 @@
 import { create } from 'zustand';
 
 export const canvasStore = create<{
-  scalingFactor: number;
-  setScalingFactor: (value: number) => void;
   imgHeight: number | null;
   setImgHeight: (value: number | null) => void;
   imgWidth: number | null;
@@ -27,9 +25,9 @@ export const canvasStore = create<{
   setSrcImgHeight: (value: number | null) => void;
   srcImgAspectRatio: number | null;
   setSrcImgAspectRatio: (value: number | null) => void;
+  zoomLevel: number;
+  setZoomLevel: (value: number) => void;
 }>((set) => ({
-  scalingFactor: 1,
-  setScalingFactor: (value) => set({ scalingFactor: value }),
   imgHeight: null,
   setImgHeight: (value) => set({ imgHeight: value }),
   imgWidth: null,
@@ -54,4 +52,6 @@ export const canvasStore = create<{
   setSrcImgHeight: (value) => set({ srcImgHeight: value }),
   srcImgAspectRatio: null,
   setSrcImgAspectRatio: (value) => set({ srcImgAspectRatio: value }),
+  zoomLevel: 1,
+  setZoomLevel: (value) => set({ zoomLevel: value }),
 }));

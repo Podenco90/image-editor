@@ -8,7 +8,7 @@ import { utils } from '@podenco/utils';
 import { Button, Checkbox, Divider, Input, Slider } from 'antd';
 import { SliderMarks } from 'antd/es/slider';
 import Link from 'next/link';
-import { useCallback } from 'react';
+import { useCallback, useRef } from 'react';
 
 const sliderMarks: SliderMarks = {
   0: 0,
@@ -20,23 +20,19 @@ const sliderMarks: SliderMarks = {
 };
 
 export default function Edit() {
-  const scalingFactor = canvasStore((state) => state.scalingFactor);
-  const setScalingFactor = canvasStore((state) => state.setScalingFactor);
   const imgHeight = canvasStore((state) => state.imgHeight);
-  const setImgHeight = canvasStore((state) => state.setImgHeight);
   const imgWidth = canvasStore((state) => state.imgWidth);
-  const setImgWidth = canvasStore((state) => state.setImgWidth);
   const isLockedAspectRatio = canvasStore((state) => state.isLockedAspectRatio);
   const setIsLockedAspectRatio = canvasStore((state) => state.setIsLockedAspectRatio);
   const aspectRatio = canvasStore((state) => state.aspectRatio);
   const setAspectRatio = canvasStore((state) => state.setAspectRatio);
   const isGrayscale = canvasStore((state) => state.isGrayscale);
-  const setIsGrayscale = canvasStore((state) => state.setIsGrayscale);
   const blurLevel = canvasStore((state) => state.blurLevel);
-  const setBlurLevel = canvasStore((state) => state.setBlurLevel);
-  const srcImg = canvasStore((state) => state.srcImg);
-
   const canvasRef = canvasStore((state) => state.canvasRef);
+  const zoomLevel = canvasStore((state) => state.zoomLevel);
+  const setZoomLevel = canvasStore((state) => state.setZoomLevel);
+
+  const container = useRef<HTMLDivElement>(null);
 
   useImage();
 
@@ -46,13 +42,10 @@ export default function Edit() {
     (value: boolean, push: boolean) => {
       const canvas = canvasRef.current;
       if (canvas && imgWidth !== null && imgHeight !== null) {
-        setIsGrayscale(value);
         push && setParams({ grayscale: `${value}` });
-        utils.setGrayscale(canvas, value);
-        utils.drawImageOnCanvas(canvas, srcImg, imgWidth, imgHeight);
       }
     },
-    [canvasRef, imgHeight, imgWidth, setIsGrayscale, setParams, srcImg],
+    [canvasRef, imgHeight, imgWidth, setParams],
   );
 
   const handleBlurLevelChange = useCallback(
@@ -60,107 +53,38 @@ export default function Edit() {
       const canvas = canvasRef.current;
 
       if (canvas && imgWidth !== null && imgHeight !== null) {
-        setBlurLevel(value);
         push && setParams({ blur: `${value}` });
-        utils.setBlur(canvas, value);
-        utils.drawImageOnCanvas(canvas, srcImg, imgWidth, imgHeight);
       }
     },
-    [canvasRef, imgHeight, imgWidth, setBlurLevel, setParams, srcImg],
-  );
-
-  const handleCanvasScaleChange = useCallback(
-    (value: number) => {
-      const canvas = canvasRef.current;
-
-      if (canvas && imgWidth !== null && imgHeight !== null) {
-        utils.clearCanvas(canvas);
-        utils.scaleCanvas(canvas, value);
-        utils.drawImageOnCanvas(canvas, srcImg, imgWidth, imgHeight);
-
-        setScalingFactor(value);
-      }
-    },
-    [canvasRef, imgWidth, imgHeight, srcImg, setScalingFactor],
+    [canvasRef, imgHeight, imgWidth, setParams],
   );
 
   const handleImgWidthChange = useCallback(
     (width: string) => {
-      if (!aspectRatio || !imgHeight) return;
+      if (aspectRatio === null || imgHeight === null) return;
       const canvas = canvasRef.current;
       if (canvas) {
-        if (isLockedAspectRatio) {
-          const newHeight = +width / aspectRatio;
-
-          utils.resizeCanvas(canvas, +width, newHeight);
-          utils.drawImageOnCanvas(canvas, srcImg, +width, newHeight);
-
-          setImgWidth(+width);
-          setImgHeight(newHeight);
-
-          setParams({ width, height: `${newHeight}` });
-
-          return;
-        }
-        utils.resizeCanvas(canvas, +width, imgHeight);
-        utils.drawImageOnCanvas(canvas, srcImg, +width, imgHeight);
-
-        setImgWidth(+width);
-        setParams({ width });
-
-        setAspectRatio(+width / imgHeight);
+        const newHeight = isLockedAspectRatio ? +width / aspectRatio : imgHeight;
+        setParams({ width: width || '0', height: `${newHeight}` });
+        if (+width === 0 || newHeight === 0) return;
+        setAspectRatio(+(width || 0) / newHeight);
       }
     },
-    [
-      aspectRatio,
-      canvasRef,
-      imgHeight,
-      isLockedAspectRatio,
-      setAspectRatio,
-      setImgHeight,
-      setImgWidth,
-      setParams,
-      srcImg,
-    ],
+    [aspectRatio, canvasRef, imgHeight, isLockedAspectRatio, setAspectRatio, setParams],
   );
 
   const handleImgHeightChange = useCallback(
     (height: string) => {
-      if (!aspectRatio || !imgWidth) return;
+      if (aspectRatio === null || imgWidth === null) return;
       const canvas = canvasRef.current;
       if (canvas) {
-        if (isLockedAspectRatio) {
-          const newWidth = +height * aspectRatio;
-
-          utils.resizeCanvas(canvas, newWidth, +height);
-          utils.drawImageOnCanvas(canvas, srcImg, newWidth, +height);
-
-          setImgHeight(+height);
-          setImgWidth(newWidth);
-
-          setParams({ width: `${newWidth}`, height });
-
-          return;
-        }
-        utils.resizeCanvas(canvas, imgWidth, +height);
-        utils.drawImageOnCanvas(canvas, srcImg, imgWidth, +height);
-
-        setImgHeight(+height);
-        setParams({ height });
-        setAspectRatio(imgWidth / +height);
+        const newWidth = isLockedAspectRatio ? +height * aspectRatio : imgWidth;
+        setParams({ width: `${newWidth}`, height: height || '0' });
+        if (+height === 0 || newWidth === 0) return;
+        setAspectRatio(newWidth / +(height || 0));
       }
     },
-    [
-      aspectRatio,
-      canvasRef,
-      imgWidth,
-      isLockedAspectRatio,
-      setAspectRatio,
-      setImgHeight,
-      setImgWidth,
-      setParams,
-      srcImg,
-    ],
+    [aspectRatio, canvasRef, imgWidth, isLockedAspectRatio, setAspectRatio, setParams],
   );
 
   const handleAspectRatioLock = useCallback(() => {
@@ -196,29 +120,32 @@ export default function Edit() {
     }
   }, [canvasRef, imgHeight, imgWidth]);
 
-  useCanvas({
-    handleBlurLevelChange,
-    handleGrayscaleChange,
-  });
-
   useUiControls();
+
+  useCanvas(container);
 
   return (
     <div className={styles.container}>
-      <div className={styles.canvas}>
-        <canvas className={styles.canvas__element} id="canvas" ref={canvasRef}></canvas>
+      <div ref={container} className={styles.canvas}>
+        <canvas
+          style={{
+            height: zoomLevel * (imgHeight || 0),
+            width: zoomLevel * (imgWidth || 0),
+          }}
+          className={styles.canvas__element}
+          id="canvas"
+          ref={canvasRef}
+        ></canvas>
       </div>
       <div className={styles.actions}>
         <div className={styles.actions__zoom}>
           <Button
-            onClick={() => scalingFactor > 0.15 && handleCanvasScaleChange(scalingFactor - 0.1)}
+            onClick={() => zoomLevel > 0.1 && setZoomLevel(utils.calcZoomOutLevel(zoomLevel))}
           >
             -
           </Button>
-          <span className={styles.label}>Zoom Level: {Math.floor(scalingFactor * 100)}%</span>
-          <Button onClick={() => scalingFactor < 1 && handleCanvasScaleChange(scalingFactor + 0.1)}>
-            +
-          </Button>
+          <span className={styles.label}>Zoom Level: {Math.round(zoomLevel * 100)}%</span>
+          <Button onClick={() => setZoomLevel(utils.calcZoomInLevel(zoomLevel))}>+</Button>
         </div>
         <Divider />
         <div className={styles.actions__sizing}>

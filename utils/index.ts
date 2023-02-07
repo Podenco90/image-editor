@@ -1,19 +1,4 @@
 export const utils = {
-  clearCanvas: (canvas: HTMLCanvasElement) => {
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.save();
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.restore();
-    }
-  },
-
-  scaleCanvas: (canvas: HTMLCanvasElement, value: number) => {
-    const ctx = canvas.getContext('2d');
-    ctx && ctx.setTransform(value, 0, 0, value, 0, 0);
-  },
-
   resizeCanvas: (canvas: HTMLCanvasElement, width: number, height: number) => {
     canvas.width = width;
     canvas.height = height;
@@ -94,5 +79,15 @@ export const utils = {
     height: number,
   ) {
     buffer.putImageData(data, 0, 0, 0, 0, width, height);
+  },
+
+  calcZoomOutLevel(zoomLevel: number) {
+    return Math.round(zoomLevel * 10) / 10 - 0.1;
+  },
+
+  calcZoomInLevel(zoomLevel: number) {
+    return Math.ceil(zoomLevel / 0.1) * 0.1 === zoomLevel
+      ? zoomLevel + 0.1
+      : Math.ceil(zoomLevel / 0.1) * 0.1;
   },
 };

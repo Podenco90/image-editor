@@ -7,6 +7,7 @@ export default function useImage() {
   const setSrcImgHeight = canvasStore((state) => state.setSrcImgHeight);
   const setSrcImg = canvasStore((state) => state.setSrcImg);
   const setSrcImgAspectRatio = canvasStore((state) => state.setSrcImgAspectRatio);
+  const setAspectRatio = canvasStore((state) => state.setAspectRatio);
   const router = useRouter();
 
   useAsync(async () => {
@@ -28,6 +29,7 @@ export default function useImage() {
       setSrcImgHeight(imgElement.naturalHeight);
       setSrcImg(imgElement);
       setSrcImgAspectRatio(imgElement.naturalWidth / imgElement.naturalHeight);
+      setAspectRatio(imgElement.naturalWidth / imgElement.naturalHeight);
     };
   }, [router.isReady, router.query.slug]);
 }
