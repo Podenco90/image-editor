@@ -1,5 +1,19 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## TO-DO:
+- Add unit/integration tests (Jest)
+- Add E2E tests (Cypress)
+- Add error handling (Try/Catch + Error Boundaries)
+- Add responsive behaviour for the the editor on mobile screens
+- Refine zoom behaviour in editor
+- Persist zoom in URL (?)
+- Possibly add SSR on image search
+- Add progressive image enhancement for search
+- Refactor css (CSS in JS or SASS)
+- Split search page into reasonable components
+- Move search page state to Zustand
+- Add commit hooks
+
 ## Getting Started
 
 First, run the development server:
