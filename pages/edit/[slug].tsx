@@ -33,10 +33,10 @@ export default function Edit() {
     <div className={styles.container}>
       <CanvasComponent />
       <div className={styles.actions}>
-        <ZoomComponent></ZoomComponent>
+        <ZoomComponent />
         <Divider />
 
-        <SizeComponent setParams={setParams}></SizeComponent>
+        <SizeComponent setParams={setParams} />
         <Divider />
 
         <GrayscaleComponent setParams={setParams} />
@@ -45,7 +45,7 @@ export default function Edit() {
         <BlurComponent setParams={setParams} />
         <Divider />
 
-        <DownloadComponent></DownloadComponent>
+        <DownloadComponent />
         <Divider />
 
         <Link className={styles.link} href="/">
