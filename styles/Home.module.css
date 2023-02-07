@@ -8,18 +8,18 @@
   gap: 20px;
 }
 
-.imageGallery > li {
+.imageGallery__item {
   flex-basis: 350px;
   flex-grow: 1;
 }
 
-.imageContainer {
+.imageGallery__imageContainer {
   min-height: 300px;
   position: relative;
   display: flex;
 }
 
-.imageGallery figcaption {
+.imageGallery__title {
   display: flex;
   justify-content: center;
   gap: 1rem;

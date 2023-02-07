@@ -23,13 +23,13 @@ const generateAspectRatio = (link: string) => {
 
 export default function ImageGallery({ data }: { data: APIImage[] | null }) {
   return (
-    <ul role="list" className={styles.imageGallery}>
+    <div className={styles.imageGallery}>
       {data &&
         data.map((item, i) => {
           const aspectRatio = generateAspectRatio(item.download_url);
           return (
-            <li key={item.id}>
-              <div className={styles.imageContainer}>
+            <div className={styles.imageGallery__item} key={item.id}>
+              <div className={styles.imageGallery__imageContainer}>
                 <Image
                   src={`${process.env.NEXT_PUBLIC_BASE_URL}/id/${item.id}/${aspectRatio}`}
                   alt="gallery image"
@@ -40,17 +40,17 @@ export default function ImageGallery({ data }: { data: APIImage[] | null }) {
                             33vw"
                 ></Image>
               </div>
-              <figcaption>
+              <div className={styles.imageGallery__title}>
                 <span>{item.author} </span>
                 <Link href={`/edit/${item.id}`}>
                   <Button className={styles.imageContainer__Button}>
                     <EditFilled />
                   </Button>
                 </Link>
-              </figcaption>
-            </li>
+              </div>
+            </div>
           );
         })}
-    </ul>
+    </div>
   );
 }
