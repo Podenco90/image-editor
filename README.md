@@ -6,7 +6,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - Add E2E tests (Cypress)
 - Add error handling (Try/Catch + Error Boundaries)
 - Add responsive behaviour for the the editor on mobile screens
-- Refine zoom behaviour in editor
+- Refine zoom behaviour in editor (zoom on size change, button to fit image into screensize, ...)
+- Resize listener on screen to resize canvas / reset zoom (?)
 - Persist zoom in URL (?)
 - Possibly add SSR on image search
 - Add progressive image enhancement for search (Blur hash or prefetch small image)
@@ -15,6 +16,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - Move search page state to Zustand
 - Add commit hooks
 - Check app performance & accessibility
+- Unify number/string handling to avoid type conversions in the code base
+- Add caching and prefetching on search (react-query)
 
 ## Getting Started
 
