@@ -21,10 +21,11 @@ export default function Size({
       if (aspectRatio === null || imgWidth === null) return;
       const canvas = canvasRef.current;
       if (canvas) {
-        const newWidth = isLockedAspectRatio ? +height * aspectRatio : imgWidth;
-        setParams({ width: `${newWidth}`, height: height || '0' });
-        if (+height === 0 || newWidth === 0) return;
-        setAspectRatio(newWidth / +(height || 0));
+        const normalizedHeight = height.replace(/^0+/, '');
+        const newWidth = isLockedAspectRatio ? +normalizedHeight * aspectRatio : imgWidth;
+        setParams({ width: `${newWidth}`, height: normalizedHeight || '0' });
+        if (+normalizedHeight === 0 || newWidth === 0) return;
+        setAspectRatio(newWidth / +(normalizedHeight || 0));
       }
     },
     [aspectRatio, canvasRef, imgWidth, isLockedAspectRatio, setAspectRatio, setParams],
@@ -35,10 +36,11 @@ export default function Size({
       if (aspectRatio === null || imgHeight === null) return;
       const canvas = canvasRef.current;
       if (canvas) {
-        const newHeight = isLockedAspectRatio ? +width / aspectRatio : imgHeight;
-        setParams({ width: width || '0', height: `${newHeight}` });
-        if (+width === 0 || newHeight === 0) return;
-        setAspectRatio(+(width || 0) / newHeight);
+        const normalizedWidth = width.replace(/^0+/, '');
+        const newHeight = isLockedAspectRatio ? +normalizedWidth / aspectRatio : imgHeight;
+        setParams({ width: normalizedWidth || '0', height: `${newHeight}` });
+        if (+normalizedWidth === 0 || newHeight === 0) return;
+        setAspectRatio(+(normalizedWidth || 0) / newHeight);
       }
     },
     [aspectRatio, canvasRef, imgHeight, isLockedAspectRatio, setAspectRatio, setParams],
