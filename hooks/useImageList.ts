@@ -1,7 +1,8 @@
 import { APIImage } from '@podenco/components/imageGallery';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { Dispatch, SetStateAction } from 'react';
-import { useAsync, usePrevious } from 'react-use';
+import { Dispatch, SetStateAction, useEffect } from 'react';
+import { usePrevious } from 'react-use';
 
 export default function useImageList({
   page,
@@ -17,18 +18,21 @@ export default function useImageList({
   const router = useRouter();
   const previousPage = usePrevious(page);
 
-  useAsync(async () => {
-    if (!router.isReady || page === undefined) return;
+  useQuery({
+    queryKey: ['images', page],
+    queryFn: async () => {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/v2/list/?page=${page ?? 1}`);
+      const imgData = await res.json();
+      setData(imgData);
+      return imgData;
+    },
+    enabled: router.isReady && page !== undefined && page !== null && previousPage !== page,
+  });
 
-    if (page === null) {
+  useEffect(() => {
+    if (router.isReady && page === null) {
       setParams({ page: '1' });
       return;
     }
-
-    if (data && previousPage === page) return;
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/v2/list/?page=${page ?? 1}`);
-    const imgData = await res.json();
-    setData(imgData);
   }, [data, page, router.isReady, setParams]);
 }
