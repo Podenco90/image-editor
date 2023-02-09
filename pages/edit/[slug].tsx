@@ -21,7 +21,7 @@ export default function Edit() {
     reset();
   });
 
-  const [_, setParams] = useQueryParams();
+  const [setParams] = useQueryParams();
 
   useImage();
 

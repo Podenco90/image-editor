@@ -10,7 +10,7 @@ export default function useImageList({
   data,
   setData,
 }: {
-  page: string | null | undefined;
+  page: number | null | undefined;
   setParams: (keyVal: Record<string, string>) => void;
   data: APIImage[] | null;
   setData: Dispatch<SetStateAction<APIImage[] | null>>;

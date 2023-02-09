@@ -1,5 +1,15 @@
 import { create } from 'zustand';
 
+interface SearchParams {
+  width: number | null;
+  height: number | null;
+  lockedAspectRatio: string | null;
+  blur: number | null;
+  grayscale: string | null;
+  page: number | undefined;
+}
+type Nullable<T> = { [K in keyof T]: T[K] | null };
+
 type State = {
   imgHeight: number | null;
   imgWidth: number | null;

@@ -2,15 +2,15 @@ import ImageGalleryComponent, { APIImage } from '@podenco/components/imageGaller
 import SearchActionsComponent from '@podenco/components/searchActions';
 import useImageList from '@podenco/hooks/useImageList';
 import useQueryParams from '@podenco/hooks/useQueryParams';
+import { appStore } from '@podenco/state/app';
 import styles from '@podenco/styles/Home.module.css';
 import Head from 'next/head';
 import { useState } from 'react';
 
 export default function Home() {
   const [data, setData] = useState<APIImage[] | null>(null);
-  const [params, setParams] = useQueryParams();
-
-  const { page } = params;
+  const [setParams] = useQueryParams();
+  const { page } = appStore((state) => state.params);
 
   useImageList({ page, setData, setParams, data });
 

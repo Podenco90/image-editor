@@ -1,3 +1,4 @@
+import { appStore } from '@podenco/state/app';
 import { canvasStore } from '@podenco/state/canvas';
 import { useEffect } from 'react';
 
@@ -10,15 +11,14 @@ export default function useUiControls() {
   const setImgHeight = canvasStore((state) => state.setImgHeight);
   const setBlurLevel = canvasStore((state) => state.setBlurLevel);
   const canvasInitialized = canvasStore((state) => state.canvasInitialized);
-  const [params] = useQueryParams();
-
   const {
     width: queryWidth,
     height: queryHeight,
     lockedAspectRatio: queryLockedAspectRatio,
     blur: queryBlur,
     grayscale: queryGrayscale,
-  } = params;
+  } = appStore((state) => state.params);
+
   // init ui controls based on query params
   useEffect(() => {
     if (!canvasInitialized) return;

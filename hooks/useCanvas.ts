@@ -1,3 +1,4 @@
+import { appStore } from '@podenco/state/app';
 import { canvasStore } from '@podenco/state/canvas';
 import { utils } from '@podenco/utils';
 import { useCallback, useEffect } from 'react';
@@ -15,14 +16,12 @@ export default function useCanvas() {
   const srcImgWidth = canvasStore((state) => state.srcImgWidth);
   const setZoomLevel = canvasStore((state) => state.setZoomLevel);
   const canvasContainerRef = canvasStore((state) => state.canvasContainerRef);
-
-  const [params] = useQueryParams();
   const {
     width: queryWidth,
     height: queryHeight,
     blur: queryBlur,
     grayscale: queryGrayscale,
-  } = params;
+  } = appStore((state) => state.params);
 
   const initZoomLevel = useCallback(() => {
     if (srcImgWidth && srcImgHeight) {
