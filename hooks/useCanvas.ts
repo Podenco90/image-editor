@@ -26,8 +26,8 @@ export default function useCanvas() {
 
   const initZoomLevel = useCallback(() => {
     if (srcImgWidth && srcImgHeight) {
-      const calcWidth = (queryWidth !== null && +queryWidth) || srcImgWidth;
-      const calcHeight = (queryHeight !== null && +queryHeight) || srcImgHeight;
+      const calcWidth = (queryWidth !== null && queryWidth) || srcImgWidth;
+      const calcHeight = (queryHeight !== null && queryHeight) || srcImgHeight;
       if (canvasContainerRef && canvasContainerRef.current) {
         const element = canvasContainerRef.current;
         const containerWidth = element.clientWidth;
@@ -46,8 +46,8 @@ export default function useCanvas() {
       const canvas = canvasRef.current;
       if (canvas) {
         const ctx = canvas.getContext('2d');
-        const calcWidth = (queryWidth !== null && +queryWidth) || srcImgWidth;
-        const calcHeight = (queryHeight !== null && +queryHeight) || srcImgHeight;
+        const calcWidth = (queryWidth !== null && queryWidth) || srcImgWidth;
+        const calcHeight = (queryHeight !== null && queryHeight) || srcImgHeight;
         canvas.width = calcWidth;
         canvas.height = calcHeight;
         setImgWidth(calcWidth);
@@ -81,13 +81,13 @@ export default function useCanvas() {
     const context = canvas?.getContext('2d');
 
     if (canvas && context && srcImg) {
-      const calcWidth = queryWidth !== null ? +queryWidth : srcImg.naturalWidth;
-      const calcHeight = queryHeight !== null ? +queryHeight : srcImg.naturalHeight;
+      const calcWidth = queryWidth !== null ? queryWidth : srcImg.naturalWidth;
+      const calcHeight = queryHeight !== null ? queryHeight : srcImg.naturalHeight;
       canvas.height = calcHeight;
       canvas.width = calcWidth;
       queryGrayscale !== null &&
         utils.setGrayscale(canvas, queryGrayscale === 'true' ? true : false);
-      queryBlur !== null && utils.setBlur(canvas, +queryBlur);
+      queryBlur !== null && utils.setBlur(canvas, queryBlur);
       context.drawImage(srcImg, 0, 0, calcWidth, calcHeight);
     }
   }, [canvasInitialized, canvasRef, queryBlur, queryGrayscale, queryHeight, queryWidth, srcImg]);

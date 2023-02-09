@@ -3,12 +3,12 @@ import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 
 interface SearchParams {
-  width: string | null;
-  height: string | null;
+  width: number | null;
+  height: number | null;
   lockedAspectRatio: string | null;
-  blur: string | null;
+  blur: number | null;
   grayscale: string | null;
-  page: string | undefined;
+  page: number | undefined;
 }
 type Nullable<T> = { [K in keyof T]: T[K] | null };
 
@@ -44,13 +44,17 @@ export default function useQueryParams() {
 
   useEffect(() => {
     if (!router.isReady) return;
+    const width = searchParams.get('width');
+    const height = searchParams.get('height');
+    const page = searchParams.get('page');
+    const blur = searchParams.get('blur');
     setParams({
-      width: searchParams.get('width'),
-      height: searchParams.get('height'),
+      width: width === null ? width : +width!,
+      height: height === null ? height : +height!,
       lockedAspectRatio: searchParams.get('lockedAspectRatio'),
-      blur: searchParams.get('blur'),
+      blur: blur === null ? blur : +blur!,
       grayscale: searchParams.get('grayscale'),
-      page: searchParams.get('page'),
+      page: page === null ? page : +page!,
     });
   }, [router.isReady, searchParams]);
   return [params, pushToHistory] as const;

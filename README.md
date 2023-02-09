@@ -16,7 +16,7 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 - Move search page state to Zustand
 - Add commit hooks
 - Check app performance & accessibility
-- Unify number/string handling to avoid type conversions in the code base
+- ~~Unify number/string handling to avoid type conversions in the code base~~
 - Add caching and prefetching on search (react-query)
 
 ## Getting Started

@@ -22,12 +22,12 @@ export default function useUiControls() {
   // init ui controls based on query params
   useEffect(() => {
     if (!canvasInitialized) return;
-    queryWidth !== null && setImgWidth(+queryWidth);
-    queryHeight !== null && setImgHeight(+queryHeight);
+    queryWidth !== null && setImgWidth(queryWidth);
+    queryHeight !== null && setImgHeight(queryHeight);
     queryLockedAspectRatio !== null &&
       setIsLockedAspectRatio(queryLockedAspectRatio === 'true' ? true : false);
     queryGrayscale && setIsGrayscale(queryGrayscale === 'true' ? true : false);
-    queryBlur && setBlurLevel(+queryBlur);
+    queryBlur && setBlurLevel(queryBlur);
   }, [
     canvasInitialized,
     queryBlur,
