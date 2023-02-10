@@ -2,8 +2,6 @@ import { appStore } from '@podenco/state/app';
 import { canvasStore } from '@podenco/state/canvas';
 import { useEffect } from 'react';
 
-import useQueryParams from './useQueryParams';
-
 export default function useUiControls() {
   const setIsLockedAspectRatio = canvasStore((state) => state.setIsLockedAspectRatio);
   const setIsGrayscale = canvasStore((state) => state.setIsGrayscale);

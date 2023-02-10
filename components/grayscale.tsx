@@ -1,16 +1,15 @@
+import useSetParams from '@podenco/hooks/useSetParams';
 import { canvasStore } from '@podenco/state/canvas';
 import { Checkbox } from 'antd';
 import { useCallback } from 'react';
 
-export default function Grayscale({
-  setParams,
-}: {
-  setParams: (keyVal: Record<string, string>) => void;
-}) {
+export default function Grayscale() {
   const canvasRef = canvasStore((state) => state.canvasRef);
   const imgWidth = canvasStore((state) => state.imgWidth);
   const imgHeight = canvasStore((state) => state.imgHeight);
   const isGrayscale = canvasStore((state) => state.isGrayscale);
+
+  const setParams = useSetParams();
 
   const handleGrayscaleChange = useCallback(
     (value: boolean, push: boolean) => {

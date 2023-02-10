@@ -1,15 +1,15 @@
+import useSetParams from '@podenco/hooks/useSetParams';
+import { appStore } from '@podenco/state/app';
 import styles from '@podenco/styles/Home.module.css';
 import { Button } from 'antd';
 import { useRouter } from 'next/router';
 
-export default function SearchAction({
-  page,
-  setParams,
-}: {
-  page: number | null | undefined;
-  setParams: (keyVal: Record<string, string>) => void;
-}) {
+export default function SearchAction({}: {}) {
   const router = useRouter();
+
+  const { page } = appStore((state) => state.params);
+
+  const setParams = useSetParams();
 
   return (
     <div className={styles.actions}>

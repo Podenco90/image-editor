@@ -21,7 +21,7 @@ export default function Edit() {
     reset();
   });
 
-  const [setParams] = useQueryParams();
+  useQueryParams();
 
   useImage();
 
@@ -36,13 +36,13 @@ export default function Edit() {
         <ZoomComponent />
         <Divider />
 
-        <SizeComponent setParams={setParams} />
+        <SizeComponent />
         <Divider />
 
-        <GrayscaleComponent setParams={setParams} />
+        <GrayscaleComponent />
         <Divider />
 
-        <BlurComponent setParams={setParams} />
+        <BlurComponent />
         <Divider />
 
         <DownloadComponent />

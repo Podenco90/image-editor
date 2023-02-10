@@ -3,8 +3,6 @@ import { canvasStore } from '@podenco/state/canvas';
 import { utils } from '@podenco/utils';
 import { useCallback, useEffect } from 'react';
 
-import useQueryParams from './useQueryParams';
-
 export default function useCanvas() {
   const setImgHeight = canvasStore((state) => state.setImgHeight);
   const setImgWidth = canvasStore((state) => state.setImgWidth);

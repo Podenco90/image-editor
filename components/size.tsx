@@ -1,13 +1,10 @@
+import useSetParams from '@podenco/hooks/useSetParams';
 import { canvasStore } from '@podenco/state/canvas';
 import styles from '@podenco/styles/Edit.module.css';
 import { Checkbox, Input } from 'antd';
 import { useCallback } from 'react';
 
-export default function Size({
-  setParams,
-}: {
-  setParams: (keyVal: Record<string, string>) => void;
-}) {
+export default function Size() {
   const aspectRatio = canvasStore((state) => state.aspectRatio);
   const isLockedAspectRatio = canvasStore((state) => state.isLockedAspectRatio);
   const imgWidth = canvasStore((state) => state.imgWidth);
@@ -15,6 +12,8 @@ export default function Size({
   const setAspectRatio = canvasStore((state) => state.setAspectRatio);
   const imgHeight = canvasStore((state) => state.imgHeight);
   const canvasRef = canvasStore((state) => state.canvasRef);
+
+  const setParams = useSetParams();
 
   const handleImgHeightChange = useCallback(
     (height: string) => {

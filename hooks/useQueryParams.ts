@@ -1,40 +1,13 @@
 import { appStore } from '@podenco/state/app';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect, useState } from 'react';
-
-interface SearchParams {
-  width: number | null;
-  height: number | null;
-  lockedAspectRatio: string | null;
-  blur: number | null;
-  grayscale: string | null;
-  page: number | undefined;
-}
-type Nullable<T> = { [K in keyof T]: T[K] | null };
+import { useEffect } from 'react';
 
 export default function useQueryParams() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const setParams = appStore((state) => state.setParams);
-
-  const pushToHistory = useCallback(
-    (keyVal: Record<string, string>) => {
-      router.push(
-        {
-          pathname: router.pathname,
-          query: { ...router.query, ...keyVal },
-        },
-        undefined,
-        {
-          shallow: true,
-          scroll: true,
-        },
-      );
-    },
-    [router],
-  );
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -51,5 +24,4 @@ export default function useQueryParams() {
       page: page === null ? page : +page!,
     });
   }, [router.isReady, searchParams, setParams]);
-  return [pushToHistory] as const;
 }

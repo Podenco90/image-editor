@@ -1,21 +1,15 @@
 import { APIImage } from '@podenco/components/imageGallery';
+import { appStore } from '@podenco/state/app';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useState } from 'react';
 import { usePrevious } from 'react-use';
 
-export default function useImageList({
-  page,
-  setParams,
-  data,
-  setData,
-}: {
-  page: number | null | undefined;
-  setParams: (keyVal: Record<string, string>) => void;
-  data: APIImage[] | null;
-  setData: Dispatch<SetStateAction<APIImage[] | null>>;
-}) {
+export default function useImageList() {
   const router = useRouter();
+  const { page } = appStore((state) => state.params);
+  const [data, setData] = useState<APIImage[] | null>(null);
+
   const previousPage = usePrevious(page);
 
   useQuery({
@@ -29,10 +23,5 @@ export default function useImageList({
     enabled: router.isReady && page !== undefined && page !== null && previousPage !== page,
   });
 
-  useEffect(() => {
-    if (router.isReady && page === null) {
-      setParams({ page: '1' });
-      return;
-    }
-  }, [data, page, router.isReady, setParams]);
+  return data;
 }

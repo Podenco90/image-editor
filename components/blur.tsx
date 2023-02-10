@@ -1,3 +1,4 @@
+import useSetParams from '@podenco/hooks/useSetParams';
 import { canvasStore } from '@podenco/state/canvas';
 import styles from '@podenco/styles/Edit.module.css';
 import { Slider } from 'antd';
@@ -13,15 +14,13 @@ const sliderMarks: SliderMarks = {
   10: 10,
 };
 
-export default function Blur({
-  setParams,
-}: {
-  setParams: (keyVal: Record<string, string>) => void;
-}) {
+export default function Blur() {
   const canvasRef = canvasStore((state) => state.canvasRef);
   const imgWidth = canvasStore((state) => state.imgWidth);
   const imgHeight = canvasStore((state) => state.imgHeight);
   const blurLevel = canvasStore((state) => state.blurLevel);
+
+  const setParams = useSetParams();
 
   const handleBlurLevelChange = useCallback(
     (value: number, push: boolean) => {
