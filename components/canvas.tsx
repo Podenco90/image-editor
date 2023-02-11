@@ -1,12 +1,8 @@
-import { canvasStore } from '@podenco/state/canvas';
+import useCanvasContext from '@podenco/hooks/useCanvasContext';
 import styles from '@podenco/styles/Edit.module.css';
 
 export default function Canvas() {
-  const canvasRef = canvasStore((state) => state.canvasRef);
-  const canvasContainerRef = canvasStore((state) => state.canvasContainerRef);
-  const zoomLevel = canvasStore((state) => state.zoomLevel);
-  const imgHeight = canvasStore((state) => state.imgHeight);
-  const imgWidth = canvasStore((state) => state.imgWidth);
+  const { canvasContainerRef, zoomLevel, canvasRef, imgHeight, imgWidth } = useCanvasContext();
 
   return (
     <div ref={canvasContainerRef} className={styles.canvas}>

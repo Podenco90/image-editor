@@ -5,20 +5,20 @@ import GrayscaleComponent from '@podenco/components/grayscale';
 import SizeComponent from '@podenco/components/size';
 import ZoomComponent from '@podenco/components/zoom';
 import useCanvas from '@podenco/hooks/useCanvas';
+import useCanvasDispatchContext from '@podenco/hooks/useCanvasDispatchContext';
 import useImage from '@podenco/hooks/useImage';
 import useQueryParams from '@podenco/hooks/useQueryParams';
 import useUiControls from '@podenco/hooks/useUiControls';
-import { canvasStore } from '@podenco/state/canvas';
 import styles from '@podenco/styles/Edit.module.css';
 import { Divider } from 'antd';
 import Link from 'next/link';
 import { useUnmount } from 'react-use';
 
 export default function Edit() {
-  const reset = canvasStore((state) => state.reset);
+  const dispatch = useCanvasDispatchContext();
 
   useUnmount(() => {
-    reset();
+    dispatch({ type: 'reset' });
   });
 
   useQueryParams();

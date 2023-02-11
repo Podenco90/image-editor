@@ -1,5 +1,5 @@
+import useCanvasContext from '@podenco/hooks/useCanvasContext';
 import useSetParams from '@podenco/hooks/useSetParams';
-import { canvasStore } from '@podenco/state/canvas';
 import styles from '@podenco/styles/Edit.module.css';
 import { Slider } from 'antd';
 import { SliderMarks } from 'antd/es/slider';
@@ -15,10 +15,7 @@ const sliderMarks: SliderMarks = {
 };
 
 export default function Blur() {
-  const canvasRef = canvasStore((state) => state.canvasRef);
-  const imgWidth = canvasStore((state) => state.imgWidth);
-  const imgHeight = canvasStore((state) => state.imgHeight);
-  const blurLevel = canvasStore((state) => state.blurLevel);
+  const { canvasRef, imgWidth, imgHeight, blurLevel } = useCanvasContext();
 
   const setParams = useSetParams();
 

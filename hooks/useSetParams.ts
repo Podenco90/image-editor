@@ -1,6 +1,5 @@
-import { appStore } from '@podenco/state/app';
 import { useRouter } from 'next/router';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 
 export default function useSetParams() {
   const router = useRouter();

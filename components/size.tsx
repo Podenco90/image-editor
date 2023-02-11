@@ -1,18 +1,13 @@
+import useCanvasContext from '@podenco/hooks/useCanvasContext';
+import useCanvasDispatchContext from '@podenco/hooks/useCanvasDispatchContext';
 import useSetParams from '@podenco/hooks/useSetParams';
-import { canvasStore } from '@podenco/state/canvas';
 import styles from '@podenco/styles/Edit.module.css';
 import { Checkbox, Input } from 'antd';
 import { useCallback } from 'react';
 
 export default function Size() {
-  const aspectRatio = canvasStore((state) => state.aspectRatio);
-  const isLockedAspectRatio = canvasStore((state) => state.isLockedAspectRatio);
-  const imgWidth = canvasStore((state) => state.imgWidth);
-  const setIsLockedAspectRatio = canvasStore((state) => state.setIsLockedAspectRatio);
-  const setAspectRatio = canvasStore((state) => state.setAspectRatio);
-  const imgHeight = canvasStore((state) => state.imgHeight);
-  const canvasRef = canvasStore((state) => state.canvasRef);
-
+  const { aspectRatio, isLockedAspectRatio, imgWidth, imgHeight, canvasRef } = useCanvasContext();
+  const dispatch = useCanvasDispatchContext();
   const setParams = useSetParams();
 
   const handleImgHeightChange = useCallback(
@@ -24,10 +19,10 @@ export default function Size() {
         const newWidth = isLockedAspectRatio ? +normalizedHeight * aspectRatio : imgWidth;
         setParams({ width: `${newWidth}`, height: normalizedHeight || '0' });
         if (+normalizedHeight === 0 || newWidth === 0) return;
-        setAspectRatio(newWidth / +(normalizedHeight || 0));
+        dispatch({ type: 'set_aspect_ratio', payload: newWidth / +(normalizedHeight || 0) });
       }
     },
-    [aspectRatio, canvasRef, imgWidth, isLockedAspectRatio, setAspectRatio, setParams],
+    [aspectRatio, imgWidth, canvasRef, isLockedAspectRatio, setParams, dispatch],
   );
 
   const handleImgWidthChange = useCallback(
@@ -39,16 +34,16 @@ export default function Size() {
         const newHeight = isLockedAspectRatio ? +normalizedWidth / aspectRatio : imgHeight;
         setParams({ width: normalizedWidth || '0', height: `${newHeight}` });
         if (+normalizedWidth === 0 || newHeight === 0) return;
-        setAspectRatio(+(normalizedWidth || 0) / newHeight);
+        dispatch({ type: 'set_aspect_ratio', payload: +(normalizedWidth || 0) / newHeight });
       }
     },
-    [aspectRatio, canvasRef, imgHeight, isLockedAspectRatio, setAspectRatio, setParams],
+    [aspectRatio, canvasRef, dispatch, imgHeight, isLockedAspectRatio, setParams],
   );
 
   const handleAspectRatioLock = useCallback(() => {
-    setIsLockedAspectRatio(!isLockedAspectRatio);
+    dispatch({ type: 'set_is_locked_aspect_ratio', payload: !isLockedAspectRatio });
     setParams({ lockedAspectRatio: `${!isLockedAspectRatio}` });
-  }, [setIsLockedAspectRatio, isLockedAspectRatio, setParams]);
+  }, [dispatch, isLockedAspectRatio, setParams]);
 
   return (
     <div className={styles.actions__sizing}>

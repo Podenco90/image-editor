@@ -1,14 +1,12 @@
 import { appStore } from '@podenco/state/app';
-import { canvasStore } from '@podenco/state/canvas';
 import { useEffect } from 'react';
 
+import useCanvasContext from './useCanvasContext';
+import useCanvasDispatchContext from './useCanvasDispatchContext';
+
 export default function useUiControls() {
-  const setIsLockedAspectRatio = canvasStore((state) => state.setIsLockedAspectRatio);
-  const setIsGrayscale = canvasStore((state) => state.setIsGrayscale);
-  const setImgWidth = canvasStore((state) => state.setImgWidth);
-  const setImgHeight = canvasStore((state) => state.setImgHeight);
-  const setBlurLevel = canvasStore((state) => state.setBlurLevel);
-  const canvasInitialized = canvasStore((state) => state.canvasInitialized);
+  const { isCanvasInitialized } = useCanvasContext();
+  const dispatch = useCanvasDispatchContext();
   const {
     width: queryWidth,
     height: queryHeight,
@@ -19,24 +17,24 @@ export default function useUiControls() {
 
   // init ui controls based on query params
   useEffect(() => {
-    if (!canvasInitialized) return;
-    queryWidth !== null && setImgWidth(queryWidth);
-    queryHeight !== null && setImgHeight(queryHeight);
+    if (!isCanvasInitialized) return;
+    queryWidth !== null && dispatch({ type: 'set_img_width', payload: queryWidth });
+    queryHeight !== null && dispatch({ type: 'set_img_height', payload: queryHeight });
     queryLockedAspectRatio !== null &&
-      setIsLockedAspectRatio(queryLockedAspectRatio === 'true' ? true : false);
-    queryGrayscale && setIsGrayscale(queryGrayscale === 'true' ? true : false);
-    queryBlur && setBlurLevel(queryBlur);
+      dispatch({
+        type: 'set_is_locked_aspect_ratio',
+        payload: queryLockedAspectRatio === 'true' ? true : false,
+      });
+    queryGrayscale &&
+      dispatch({ type: 'set_is_grayscale', payload: queryGrayscale === 'true' ? true : false });
+    queryBlur && dispatch({ type: 'set_blur_level', payload: queryBlur });
   }, [
-    canvasInitialized,
+    isCanvasInitialized,
+    dispatch,
     queryBlur,
     queryGrayscale,
     queryHeight,
     queryLockedAspectRatio,
     queryWidth,
-    setBlurLevel,
-    setImgHeight,
-    setImgWidth,
-    setIsGrayscale,
-    setIsLockedAspectRatio,
   ]);
 }

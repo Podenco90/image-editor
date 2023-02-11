@@ -17,7 +17,7 @@ type State = {
   aspectRatio: number | null;
   isGrayscale: boolean;
   blurLevel: number;
-  canvasInitialized: boolean;
+  isCanvasInitialized: boolean;
   canvasRef: React.MutableRefObject<HTMLCanvasElement | null>;
   canvasContainerRef: React.MutableRefObject<HTMLDivElement | null>;
   srcImg: HTMLImageElement | null;
@@ -52,7 +52,7 @@ const initialState: State = {
   aspectRatio: null,
   isGrayscale: false,
   blurLevel: 0,
-  canvasInitialized: false,
+  isCanvasInitialized: false,
   canvasRef: { current: null },
   canvasContainerRef: { current: null },
   srcImg: null,
@@ -71,14 +71,14 @@ export const canvasStore = create<State & Actions>((set) => ({
   setAspectRatio: (value) => set({ aspectRatio: value }),
   setIsGrayscale: (value) => set({ isGrayscale: value }),
   setBlurLevel: (value) => set({ blurLevel: value }),
-  setCanvasInitialized: (value) => set({ canvasInitialized: value }),
+  setCanvasInitialized: (value) => set({ isCanvasInitialized: value }),
   setCanvasRef: (value) => set({ canvasRef: value }),
   setCanvasContainerRef: (value) => set({ canvasContainerRef: value }),
+  setZoomLevel: (value) => set({ zoomLevel: value }),
   setSrcImg: (value) => set({ srcImg: value }),
   setSrcImgWidth: (value) => set({ srcImgWidth: value }),
   setSrcImgHeight: (value) => set({ srcImgHeight: value }),
   setSrcImgAspectRatio: (value) => set({ srcImgAspectRatio: value }),
-  setZoomLevel: (value) => set({ zoomLevel: value }),
 
   reset: () => {
     set(initialState);

@@ -1,13 +1,10 @@
-import { canvasStore } from '@podenco/state/canvas';
+import useCanvasContext from '@podenco/hooks/useCanvasContext';
 import { utils } from '@podenco/utils';
 import { Button } from 'antd';
 import { useCallback } from 'react';
 
 export default function Download() {
-  const imgHeight = canvasStore((state) => state.imgHeight);
-  const imgWidth = canvasStore((state) => state.imgWidth);
-  const canvasRef = canvasStore((state) => state.canvasRef);
-
+  const { imgWidth, imgHeight, canvasRef } = useCanvasContext();
   const downloadCanvas = useCallback(() => {
     if (imgWidth === null || imgHeight === null) return;
 

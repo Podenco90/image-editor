@@ -1,19 +1,21 @@
 import { appStore } from '@podenco/state/app';
-import { canvasStore } from '@podenco/state/canvas';
 import { utils } from '@podenco/utils';
 import { useCallback, useEffect } from 'react';
 
+import useCanvasContext from './useCanvasContext';
+import useCanvasDispatchContext from './useCanvasDispatchContext';
+
 export default function useCanvas() {
-  const setImgHeight = canvasStore((state) => state.setImgHeight);
-  const setImgWidth = canvasStore((state) => state.setImgWidth);
-  const canvasInitialized = canvasStore((state) => state.canvasInitialized);
-  const setCanvasInitialized = canvasStore((state) => state.setCanvasInitialized);
-  const canvasRef = canvasStore((state) => state.canvasRef);
-  const srcImg = canvasStore((state) => state.srcImg);
-  const srcImgHeight = canvasStore((state) => state.srcImgHeight);
-  const srcImgWidth = canvasStore((state) => state.srcImgWidth);
-  const setZoomLevel = canvasStore((state) => state.setZoomLevel);
-  const canvasContainerRef = canvasStore((state) => state.canvasContainerRef);
+  const {
+    srcImgWidth,
+    srcImgHeight,
+    canvasContainerRef,
+    zoomLevel,
+    srcImg,
+    isCanvasInitialized,
+    canvasRef,
+  } = useCanvasContext();
+  const dispatch = useCanvasDispatchContext();
   const {
     width: queryWidth,
     height: queryHeight,
@@ -32,14 +34,14 @@ export default function useCanvas() {
         const scaledWidth = containerWidth / calcWidth;
         const scaledHeight = containerHeight / calcHeight;
         const factor = Math.min(scaledWidth, scaledHeight);
-        factor < 1 && setZoomLevel(factor);
+        factor < 1 && dispatch({ type: 'set_zoom_level', payload: zoomLevel });
       }
     }
-  }, [canvasContainerRef, queryHeight, queryWidth, setZoomLevel, srcImgHeight, srcImgWidth]);
+  }, [canvasContainerRef, dispatch, queryHeight, queryWidth, srcImgHeight, srcImgWidth, zoomLevel]);
 
   // fill canvas with image
   useEffect(() => {
-    if (srcImg && srcImgHeight && srcImgWidth && !canvasInitialized) {
+    if (srcImg && srcImgHeight && srcImgWidth && !isCanvasInitialized) {
       const canvas = canvasRef.current;
       if (canvas) {
         const ctx = canvas.getContext('2d');
@@ -47,25 +49,22 @@ export default function useCanvas() {
         const calcHeight = (queryHeight !== null && queryHeight) || srcImgHeight;
         canvas.width = calcWidth;
         canvas.height = calcHeight;
-        setImgWidth(calcWidth);
-        setImgHeight(calcHeight);
+        dispatch({ type: 'set_img_width', payload: calcWidth });
+        dispatch({ type: 'set_img_height', payload: calcHeight });
         initZoomLevel();
         if (ctx) {
           ctx.drawImage(srcImg, 0, 0);
-          setCanvasInitialized(true);
+          dispatch({ type: 'set_canvas_initialized', payload: true });
         }
       }
     }
   }, [
-    canvasInitialized,
+    isCanvasInitialized,
     canvasRef,
+    dispatch,
     initZoomLevel,
     queryHeight,
     queryWidth,
-    setCanvasInitialized,
-    setImgHeight,
-    setImgWidth,
-    setZoomLevel,
     srcImg,
     srcImgHeight,
     srcImgWidth,
@@ -73,7 +72,7 @@ export default function useCanvas() {
 
   // change canvas based on query params
   useEffect(() => {
-    if (!canvasInitialized) return;
+    if (!isCanvasInitialized) return;
     const canvas = canvasRef.current;
     const context = canvas?.getContext('2d');
 
@@ -87,5 +86,5 @@ export default function useCanvas() {
       queryBlur !== null && utils.setBlur(canvas, queryBlur);
       context.drawImage(srcImg, 0, 0, calcWidth, calcHeight);
     }
-  }, [canvasInitialized, canvasRef, queryBlur, queryGrayscale, queryHeight, queryWidth, srcImg]);
+  }, [isCanvasInitialized, canvasRef, queryBlur, queryGrayscale, queryHeight, queryWidth, srcImg]);
 }

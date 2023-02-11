@@ -1,36 +1,44 @@
-import { canvasStore } from '@podenco/state/canvas';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 
+import useCanvasDispatchContext from './useCanvasDispatchContext';
+
 export default function useImage() {
-  const setSrcImgWidth = canvasStore((state) => state.setSrcImgWidth);
-  const setSrcImgHeight = canvasStore((state) => state.setSrcImgHeight);
-  const setSrcImg = canvasStore((state) => state.setSrcImg);
-  const setSrcImgAspectRatio = canvasStore((state) => state.setSrcImgAspectRatio);
-  const setAspectRatio = canvasStore((state) => state.setAspectRatio);
+  const dispatch = useCanvasDispatchContext();
   const router = useRouter();
 
   useQuery({
     queryKey: ['image', router.query.slug],
     queryFn: async () => {
+      console.log('running');
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/id/${router.query.slug}/info`);
-      const { download_url: downloadUrl } = await res.json();
+      const resToJson = await res.json();
+      const { download_url: downloadUrl } = resToJson;
 
       const imgElement = new Image();
+
+      imgElement.crossOrigin = 'anonymous';
+
+      imgElement.onload = () => {
+        console.log('here');
+        dispatch({ type: 'set_src_img', payload: imgElement });
+        dispatch({ type: 'set_src_img_width', payload: imgElement.naturalWidth });
+        dispatch({ type: 'set_src_img_height', payload: imgElement.naturalHeight });
+        dispatch({
+          type: 'set_src_img_aspect_ratio',
+          payload: imgElement.naturalWidth / imgElement.naturalHeight,
+        });
+        dispatch({
+          type: 'set_aspect_ratio',
+          payload: imgElement.naturalWidth / imgElement.naturalHeight,
+        });
+      };
 
       if (downloadUrl) {
         imgElement.src = downloadUrl;
       }
 
-      imgElement.crossOrigin = 'anonymous';
-
-      imgElement.onload = () => {
-        setSrcImgWidth(imgElement.naturalWidth);
-        setSrcImgHeight(imgElement.naturalHeight);
-        setSrcImg(imgElement);
-        setSrcImgAspectRatio(imgElement.naturalWidth / imgElement.naturalHeight);
-        setAspectRatio(imgElement.naturalWidth / imgElement.naturalHeight);
-      };
+      // return resToJson;
     },
     enabled: router.query.slug !== undefined && router.isReady,
   });
